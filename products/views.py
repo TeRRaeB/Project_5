@@ -19,13 +19,11 @@ def all_products(request):
             category_name = request.GET['category'].lower()
             products = products.filter(category__name=category_name)
             selected_category = Category.objects.filter(name=category_name).first()
-            print(f"Фильтрация по категориям: {category_name} — Найдено {products.count()} товаров")
 
         if 'subcategory' in request.GET:
             subcategory_name = request.GET['subcategory'].lower()
             products = products.filter(subcategory__name=subcategory_name)
             selected_subcategory = SubCategory.objects.filter(name=subcategory_name).first()
-            print(f"Фильтрация по подкатегориям: {subcategory_name} — Найдено {products.count()} товаров")
 
         if 'q' in request.GET:
             query = request.GET['q']
@@ -35,7 +33,6 @@ def all_products(request):
             queries = Q(name__icontains=query) | Q(description__icontains=query)
             products = products.filter(queries)  
             
-        print(f"Итоговое количество товаров: {products.count()}")
 
     context = {
         'products': products,
