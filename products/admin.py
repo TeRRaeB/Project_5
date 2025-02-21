@@ -37,4 +37,7 @@ class ReviewAdmin(admin.ModelAdmin):
     short_comment.short_description = "Comment"
 
 admin.site.register(Category)
-admin.site.register(SubCategory)
+
+@admin.register(SubCategory)
+class SubCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'category')

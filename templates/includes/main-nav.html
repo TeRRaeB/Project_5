@@ -18,10 +18,10 @@
                 Meat
             </a>
             <div class="dropdown-menu border-0" aria-labelledby="meat-link">
-                <a href="" class="dropdown-item">Beef</a>
-                <a href="" class="dropdown-item">Lamb</a>
-                <a href="" class="dropdown-item">Chicken</a>
-                <a href="" class="dropdown-item">All Meat</a>
+                <a href="{% url 'products' %}?subcategory=beef" class="dropdown-item">Beef</a>
+                <a href="{% url 'products' %}?subcategory=lamb" class="dropdown-item">Lamb</a>
+                <a href="{% url 'products' %}?subcategory=chicken" class="dropdown-item">Chicken</a>
+                <a href="{% url 'products' %}?category=meat" class="dropdown-item">All Meat</a>
             </div>
         </li>
 
@@ -30,11 +30,11 @@
                 Dairy & Eggs
             </a>
             <div class="dropdown-menu border-0" aria-labelledby="dairy-link">
-                <a href="" class="dropdown-item">Fresh milk</a>
-                <a href="" class="dropdown-item">Farmhouse cheeses</a>
-                <a href="" class="dropdown-item">Butter</a>
-                <a href="" class="dropdown-item">Eggs</a>
-                <a href="" class="dropdown-item">All Dairy&Eggs Products</a>
+                <a href="{% url 'products' %}?subcategory=fresh%20milk" class="dropdown-item">Fresh milk</a>
+                <a href="{% url 'products' %}?subcategory=farmhouse%20cheeses" class="dropdown-item">Farmhouse cheeses</a>
+                <a href="{% url 'products' %}?subcategory=butter" class="dropdown-item">Butter</a>
+                <a href="{% url 'products' %}?subcategory=eggs" class="dropdown-item">Eggs</a>
+                <a href="{% url 'products' %}?category=dairy%26eggs" class="dropdown-item">All Dairy&Eggs Products</a>
             </div>
         </li>
 
@@ -43,11 +43,11 @@
                 Fresh Produce
             </a>
             <div class="dropdown-menu border-0" aria-labelledby="fresh-link">
-                <a href="" class="dropdown-item">Vegetables</a>
-                <a href="" class="dropdown-item">Greens</a>
-                <a href="" class="dropdown-item">Fruits</a>
-                <a href="" class="dropdown-item">Berries</a>
-                <a href="" class="dropdown-item">All Fresh Produce</a>
+                <a href="{% url 'products' %}?subcategory=vegetables" class="dropdown-item">Vegetables</a>
+                <a href="{% url 'products' %}?subcategory=greens" class="dropdown-item">Greens</a>
+                <a href="{% url 'products' %}?subcategory=fruits" class="dropdown-item">Fruits</a>
+                <a href="{% url 'products' %}?subcategory=berries" class="dropdown-item">Berries</a>
+                <a href="{% url 'products' %}?category=fresh%20produce" class="dropdown-item">All Fresh Produce</a>
             </div>
         </li>
     </ul>
