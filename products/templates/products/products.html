@@ -46,8 +46,8 @@
                                 <div class="row">
                                     <div class="col">
                                         <p class="lead mb-0 text-left font-weight-bold">€ {{ product.price }} </p>
-                                        <small class="text-muted"> {{ product.category }} / </small>
-                                        <small class="text-muted"><i> {{ product.subcategory }}</i></small>
+                                         <small class="text-muted"><a class="text-secondary"href="{% url 'products' %}?category={{ product.category }}"> {{ product.category }} </a> / </small>
+                                        <small class="text-muted"><a class="text-secondary"href="{% url 'products' %}?subcategory={{ product.subcategory }}"> <i> {{ product.subcategory }}</i></a></small>
                                         <p class="text-muted text-end"> 
                                                 {% if product.average_rating < 2 %}
                                                     <i class="fa-regular fa-star"></i>
