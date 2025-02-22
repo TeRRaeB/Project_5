@@ -20,9 +20,9 @@ def all_products(request):
             sort = sortkey
             if sortkey == "name":
                 sortkey = "name"
-            elif sortkey == "average_rating":
-                products = products.annotate(average_rating=Avg("ratings__rating"))
-                sortkey = "average_rating"
+            elif sortkey == "rating":
+                products = products.annotate(rating=Avg("ratings__rating"))
+                sortkey = "rating"
             elif sortkey == "category":
                 sortkey = "category__name"
             elif sortkey == "subcategory":

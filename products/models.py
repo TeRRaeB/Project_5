@@ -27,7 +27,7 @@ class Product(models.Model):
     def __str__(self):
         return self.name
     
-    def average_rating(self): 
+    def rating(self): 
         ratings = list(self.ratings.values_list('rating', flat=True)) + list(self.reviews.values_list('rating', flat=True))
         return round(sum(ratings) / len(ratings), 1) if ratings else 0.0
 

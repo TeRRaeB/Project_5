@@ -4,13 +4,13 @@ from .models import Product, Category, SubCategory, Rating, Review
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'subcategory', 'price', 'average_rating', 'total_votes')
+    list_display = ('name', 'category', 'subcategory', 'price', 'rating', 'total_votes')
     search_fields = ('name', 'description')
     list_filter = ('category', 'subcategory')
 
-    def average_rating(self, obj):
-        return obj.average_rating()
-    average_rating.short_description = "Avr. rating"
+    def rating(self, obj):
+        return obj.rating()
+    rating.short_description = "Avr. rating"
 
     def total_votes(self, obj):
         return obj.total_votes()
