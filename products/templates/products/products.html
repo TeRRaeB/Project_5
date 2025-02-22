@@ -99,9 +99,34 @@
         </div>
     </div>
 </div>
+<div class="btt-button shadow-sm rounded-3 border border-black">
+    <a class="btt-link d-flex h-100">
+        <i class="fa-solid fa-arrow-up text-black mx-auto my-auto"></i> 
+    </a>	
+</div>
 {% endblock %}
 
-{% block postloadjs %}
+{% block postloadjs %} 
+    {{ block.super }}
+    <script type="text/javascript">
+       $(document).ready(function() {
+        let button = $('.btt-button');
+        button.hide();
+
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 100) {
+                button.fadeIn();
+            } else {
+                button.fadeOut();
+            }
+        });
+
+        $('.btt-link').click(function(e) {
+            e.preventDefault();
+            $('html, body').animate({ scrollTop: 0 }, 500);
+        });
+    });
+    </script>
     <script type="text/javascript"> 
         $(document).ready(function() {
             $('#sort-selector').change(function() {

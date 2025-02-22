@@ -12,9 +12,14 @@ body {
     font-family: 'Lato';
 }
 .container-fluid {    
-    background-color: rgba(255, 255, 255, 0.8) ;
+    background-color: rgba(255, 255, 255, 0.6) ;
 }
-
+.card {
+    transition: transform 0.3s ease-in-out;
+}
+.card:hover {
+    transform: scale(1.05);
+}
 .bg-image {
     background-image: url('/media/main_image.jpg');
     background-size: auto;
@@ -90,6 +95,26 @@ a.category-badge > span.badge:hover{
     color: #fff !important;
 }
 
+.btt-button {
+    height: 42px;
+    width: 42px;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+
+.btt-button:hover{
+    background: #212529 !important; 
+}
+.btt-button:hover i {
+    color: #fff !important;
+}
+
+.btt-link {
+    cursor: pointer;
+    text-decoration: none;
+    outline: none;
+}
 
 @media (min-width: 1200px){
     .container {
