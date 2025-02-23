@@ -34,7 +34,8 @@
                                     <th scope="col">Price</th>
                                     <th scope="col">Qty</th>
                                     <th scope="col">Subtotal</th>
-                                    <th scope="col"></th>
+                                    <th scope="col">Update</th>
+                                    <th scope="col">Remove</th>
                                 </tr>
                             </thead>
 
@@ -108,10 +109,11 @@
                                     {% endif %}
                                 </td>
                                 <td></td>
+                                <td></td>
                             </tr>
                             <tr>
-                                <td>                                    
-                                </td>
+                                <td></td>
+                                <td></td>
                                 
                                 <td colspan="5" class="text-end">
                                     <a href="{% url 'products' %}" class="btn btn-outline-black rounded-0 btn-lg">
@@ -157,33 +159,17 @@
 
     
     
-    $('.remove-item').click(function(e){
-        e.preventDefault();
-    
-        let csrftoken = "{{ csrf_token }}";
-        let itemId = $(this).attr('id').split('remove_')[1]; 
+    $('.remove-item').click(function(e) {
+        let csrfToken = "{{ csrf_token }}";
+        let itemId = $(this).attr('id').split('remove_')[1];
         let url = `/bag/remove/${itemId}/`;
-    
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: {'csrfmiddlewaretoken': csrftoken},
-            dataType: "json",
-            success: function(response){
-                if (response.success) {
-                    let row = $('#remove_' + itemId).closest('tr');
-                    row.fadeOut(500, function(){
-                        $(this).remove(); 
-                        if ($('.remove-item').length === 0) {
-                            location.reload();
-                        }
-                    });
-                } else {
-                    alert("Error: " + response.error);
-                }
-            }, 
-        });
-    });
+        let data = {'csrfmiddlewaretoken': csrfToken};
+
+        $.post(url, data)
+         .done(function() {
+             location.reload();
+         });
+    })
 </script>
 
 
