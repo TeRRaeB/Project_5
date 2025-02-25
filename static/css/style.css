@@ -202,6 +202,11 @@ a.category-badge > span.badge:hover{
     overflow-y: auto;
 }
 
+fieldset > .form-group {
+    padding-bottom: 2%;
+}
+
+
 @media (min-width: 1200px){
     .container {
         max-width: 80%;
