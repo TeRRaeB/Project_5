@@ -3,8 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models.functions import Coalesce
 from django.contrib import messages
 from django.db.models import Q, Avg, Value,FloatField
-from .models import Product, Rating, Category, SubCategory
-
+from .models import Product, Rating, Category, SubCategory, Review
+from .forms import ReviewForm
 
 def all_products(request):
     """A view to show all products"""
@@ -75,6 +75,12 @@ def all_products(request):
 def product_detail(request, product_id):
 
     product = get_object_or_404(Product, pk=product_id)
+    
+    if request.GET.get('show_all'):
+        reviews = product.reviews.all()
+    else:
+        reviews = product.reviews.all()[:3]
+        
     user_rating = Rating.objects.filter(user=request.user, product=product).first()
     if user_rating:
         user_rating_value = user_rating.rating
@@ -86,6 +92,7 @@ def product_detail(request, product_id):
         "product": product,
         "user_rating_value": user_rating_value,
         "stars_range": stars_range,
+        "reviews": reviews
     }
 
     return render(request, "products/product_detail.html", context)
@@ -107,5 +114,40 @@ def rate_product(request, product_id):
     if not created:
         rating.rating = rating_value
         rating.save()
-
+    
+    messages.info(request, "Your rating has been sent!")
     return redirect('product_detail', product_id=product_id)
+
+
+@login_required
+def add_review(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    if request.method == "POST":
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            rating_value = form.cleaned_data.get("rating")
+            comment = form.cleaned_data.get("comment")
+
+            review, created = Review.objects.update_or_create(
+                user=request.user,
+                product=product,
+                defaults={"rating": rating_value, "comment": comment},
+            )
+
+            rating, created = Rating.objects.update_or_create(
+                user=request.user,
+                product=product,
+                defaults={"rating": rating_value},
+            )
+
+            messages.info(request, "Your review has been submitted!", extra_tags="review")
+            return redirect("product_detail", product_id=product.id)
+        else:
+            messages.error(request, "There was an issue with your review.", extra_tags="review")
+            return redirect("product_detail", product_id=product.id)
+
+    else:
+        form = ReviewForm()
+
+    return render(request, "products/add_review.html", {"form": form, "product": product})

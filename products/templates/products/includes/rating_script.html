@@ -1,63 +1,57 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const stars = document.querySelectorAll('.star');
-        const ratingForm = document.getElementById('rating-form');
-        const ratingValueInput = document.getElementById('rating-value');
-    
-        let selectedRating = parseInt(ratingValueInput.value) || 0;  
+        const ratingStars = document.querySelectorAll("#rating-form .star");
+        const reviewStars = document.querySelectorAll("#review-stars .review-star");
 
-        function updateStars(rating) {
+        const ratingForm = document.getElementById("rating-form");
+        const ratingValueInput = document.getElementById("rating-value");
+
+        const reviewForm = document.getElementById("review-form");
+        const reviewValueInput = document.getElementById("review-rating-value");
+
+        function updateStars(stars, rating) {
             stars.forEach(star => {
-                const starValue = parseInt(star.getAttribute('data-value'));
+                const starValue = parseInt(star.getAttribute("data-value"));
                 if (starValue <= rating) {
-                    star.classList.add('fa-solid'); 
-                    star.classList.remove('fa-regular');
+                    star.classList.add("fa-solid");
+                    star.classList.remove("fa-regular");
                 } else {
-                    star.classList.add('fa-regular'); 
-                    star.classList.remove('fa-solid');
+                    star.classList.add("fa-regular");
+                    star.classList.remove("fa-solid");
                 }
             });
         }
- 
-        updateStars(selectedRating);
 
-        stars.forEach(star => {
-            star.addEventListener('mouseenter', () => {
-                const hoverRating = parseInt(star.getAttribute('data-value'));
-                stars.forEach(s => {
-                    if (parseInt(s.getAttribute('data-value')) <= hoverRating) {
-                        s.classList.add('hovered');
-                    } else {
-                        s.classList.remove('hovered');
-                    }
-                });
-            });
-
-            star.addEventListener('mouseleave', () => {
-                stars.forEach(s => s.classList.remove('hovered'));
-            });
-
-            star.addEventListener('click', () => {
-                selectedRating = parseInt(star.getAttribute('data-value'));
+        ratingStars.forEach(star => {
+            star.addEventListener("click", () => {
+                const selectedRating = parseInt(star.getAttribute("data-value"));
                 ratingValueInput.value = selectedRating;
-                updateStars(selectedRating);  
-                ratingForm.submit();   
+                updateStars(ratingStars, selectedRating);
+                console.log("Rating selected: " + selectedRating); 
+                ratingForm.submit(); 
             });
         });
-    });
 
-    function setRating(value) {
-        document.getElementById('rating-value').value = value;
+        reviewStars.forEach(star => {
+            star.addEventListener("click", () => {
+                const selectedRating = parseInt(star.getAttribute("data-value"));
+                reviewValueInput.value = selectedRating;
+                updateStars(reviewStars, selectedRating);
+            });
+        });
 
-        var stars = document.querySelectorAll('.star');
-        stars.forEach(function(star, index) {
-            if (index < value) {
-                star.classList.remove('fa-regular');
-                star.classList.add('fa-solid');
+        reviewForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log("Review form submitted");
+
+            const selectedRating = reviewValueInput.value;
+            if (selectedRating > 0) {
+                console.log("Submitting review with rating: " + selectedRating);  
+                console.log(reviewForm);
+                reviewForm.submit(); 
             } else {
-                star.classList.remove('fa-solid');
-                star.classList.add('fa-regular');
+                alert("Please select a rating before submitting your review.");
             }
         });
-    }
+    });
 </script>
