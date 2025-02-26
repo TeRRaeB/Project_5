@@ -27,9 +27,11 @@ class Product(models.Model):
     def __str__(self):
         return self.name
     
-    def rating(self): 
+    def rating(self):
         ratings = list(self.ratings.values_list('rating', flat=True)) + list(self.reviews.values_list('rating', flat=True))
-        return round(sum(ratings) / len(ratings), 1) if ratings else 0.0
+        if not ratings: 
+            return 0
+        return round(sum(ratings) / len(ratings), 1) if ratings else 0
 
     def total_votes(self): 
         return self.ratings.count() + self.reviews.count()
@@ -37,8 +39,8 @@ class Product(models.Model):
  
 class Rating(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    product = models.ForeignKey('Product', related_name='ratings', on_delete=models.CASCADE)
-    rating = models.PositiveSmallIntegerField(choices=[(i, i) for i in range(1, 6)])
+    product = models.ForeignKey(Product, related_name='ratings', on_delete=models.CASCADE)
+    rating = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -47,7 +49,7 @@ class Rating(models.Model):
 class Review(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     product = models.ForeignKey('Product', related_name='reviews', on_delete=models.CASCADE)
-    rating = models.PositiveSmallIntegerField(choices=[(i, i) for i in range(1, 6)])
+    rating = models.IntegerField()
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 

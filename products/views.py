@@ -1,6 +1,8 @@
-from django.shortcuts import render, get_object_or_404, redirect, reverse
+from django.shortcuts import render, get_object_or_404, redirect, reverse,HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.db.models.functions import Coalesce
 from django.contrib import messages
-from django.db.models import Q, Avg
+from django.db.models import Q, Avg, Value,FloatField
 from .models import Product, Rating, Category, SubCategory
 
 
@@ -21,7 +23,9 @@ def all_products(request):
             if sortkey == "name":
                 sortkey = "name"
             elif sortkey == "rating":
-                products = products.annotate(rating=Avg("ratings__rating"))
+                products = products.annotate(
+                    rating=Coalesce(Avg("ratings__rating"), Value(0), output_field=FloatField())
+                    )
                 sortkey = "rating"
             elif sortkey == "category":
                 sortkey = "category__name"
@@ -67,12 +71,41 @@ def all_products(request):
     return render(request, "products/products.html", context)
 
 
+@login_required
 def product_detail(request, product_id):
-    """A view to show detail product"""
 
     product = get_object_or_404(Product, pk=product_id)
+    user_rating = Rating.objects.filter(user=request.user, product=product).first()
+    if user_rating:
+        user_rating_value = user_rating.rating
+    else:
+        user_rating_value = 0 
+    stars_range = range(1, 6)
+
     context = {
         "product": product,
+        "user_rating_value": user_rating_value,
+        "stars_range": stars_range,
     }
 
     return render(request, "products/product_detail.html", context)
+
+@login_required
+def rate_product(request, product_id):
+    product = Product.objects.get(id=product_id)
+    rating_value = request.POST.get('rating')
+    if rating_value is None: 
+        return HttpResponse("Rating is required", status=400)
+    
+    rating_value = int(rating_value) 
+    
+    rating, created = Rating.objects.get_or_create(
+        user=request.user, product=product,
+        defaults={'rating': rating_value}   
+    )
+     
+    if not created:
+        rating.rating = rating_value
+        rating.save()
+
+    return redirect('product_detail', product_id=product_id)

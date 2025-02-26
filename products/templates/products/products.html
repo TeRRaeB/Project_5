@@ -79,15 +79,17 @@
                                         <p class="lead mb-0 text-left font-weight-bold">€ {{ product.price }} </p>
                                          <small class="text-muted"><i class="fas fa-tag mr-1"></i><a class="text-secondary"href="{% url 'products' %}?category={{ product.category|urlencode }}"> {{ product.category|capfirst }} </a> / </small>
                                         <small class="text-muted"><a class="text-secondary"href="{% url 'products' %}?subcategory={{ product.subcategory|urlencode }}"> <i> {{ product.subcategory|capfirst }}</i></a></small>
-                                        <p class="text-muted text-end"> 
-                                                {% if product.rating < 2 %}
-                                                    <i class="fa-regular fa-star"></i>
-                                                {% elif 2 <= product.rating < 4 %}
-                                                    <i class="fa-regular fa-star-half"></i>
-                                                {% else %}
-                                                    <i class="fa-solid fa-star"></i>
-                                                {% endif %}
-                                                {{ product.rating }}
+                                        <p class="text-muted text-end">
+                                            {% if product.rating == 0 %}
+                                                <i class="fa-regular fa-star"></i>
+                                            {% elif product.rating < 2 %}
+                                                <i class="fa-regular fa-star"></i>
+                                            {% elif product.rating >= 2 and product.rating < 4 %}
+                                                <i class="fa-solid fa-star-half"></i>
+                                            {% elif product.rating >= 4 %}
+                                                <i class="fa-solid fa-star"></i>
+                                            {% endif %}
+                                            {{ product.rating }}
                                         </p>
                                     </div>
                                 </div>

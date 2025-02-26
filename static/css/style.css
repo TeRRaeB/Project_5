@@ -219,6 +219,28 @@ fieldset > .form-group {
     padding-bottom: 2%;
 }
 
+.rating .stars {
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.rating .star {
+    font-size: 2rem;
+    color: #ddd;
+    margin: 0 5px;
+    transition: color 0.3s;
+}
+
+.rating .star:hover,
+.rating .star.hovered {
+    color: gold;
+}
+
+.rating .star.selected {
+    color: gold;
+}
+
 
 @media (min-width: 1200px){
     .container {
