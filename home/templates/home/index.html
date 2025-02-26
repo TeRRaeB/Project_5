@@ -13,8 +13,11 @@
 
 
 {% block content %}
+<div class="container-fluid">
 <div class="container h-100 bg-image">
     <div class="row h-100 align-items-end">
+        <div class="col-12 col-md-6">
+        </div>
         <div class="col-12 col-md-6 text-end">
             <h1 class="display-4 logo-font text-white">Fresh products here</h1>
             <div class="my-5">
@@ -25,4 +28,95 @@
         </div>
     </div>
 </div>
+
+<section class="quality-section py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 text-center">
+                <img src="{{ MEDIA_URL }}quality1.jpg" class="img-fluid" alt="Freshness">
+            </div>
+            <div class="col-md-6">
+                <h2>Freshness That Speaks for Itself</h2>
+                <p>At Golden Hoof, we pride ourselves on providing the freshest farm products directly from the fields to your table. Our products are harvested at peak ripeness and handled with care to preserve their natural flavors and nutrients. We work closely with local farmers who use sustainable farming practices, ensuring that each item you purchase is not only fresh but also responsibly grown. Whether you're shopping for vegetables, fruits, or dairy, you can be assured that the products you receive are of the highest quality.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<hr>
+
+<section class="quality-section py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 order-md-2 text-center">
+                <img src="{{ MEDIA_URL }}quality2.jpg" class="img-fluid" alt="Sustainability">
+            </div>
+            <div class="col-md-6 order-md-1">
+                <h2>Sustainably Grown, Naturally Better</h2>
+                <p>At Golden Hoof, sustainability is at the heart of everything we do. We believe in providing you with natural products that support both your health and the environment. Our farm partners use eco-friendly practices, from crop rotation to water conservation, to ensure that our farming methods are gentle on the earth. By choosing our products, you're not only getting the best in quality, but you're also supporting farming practices that protect our planet for future generations.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<hr>
+
+<section class="quality-section py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 text-center">
+                <img src="{{ MEDIA_URL }}quality3.jpg" class="img-fluid" alt="Taste the Difference">
+            </div>
+            <div class="col-md-6">
+                <h2>Taste the Difference with Every Bite</h2>
+                <p>There’s a difference between farm-fresh produce and mass-produced goods—and once you taste the products from Golden Hoof, you’ll notice it immediately. Our meats, dairy, and produce are full of flavor because they’re grown and raised with care, free from harmful chemicals and additives. Whether you’re enjoying a hearty steak, a refreshing salad, or a creamy dairy product, you can taste the difference in every bite. We believe that high-quality, natural food makes for a better meal and a healthier you.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<hr> 
+<section class="reviews-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Customer Reviews</h2>
+        <div class="row" id="reviews-container"> 
+            <div class="col-md-4 mb-4">
+                <div class="review-card">
+                    <p>"Great quality products! I’m really impressed with the freshness and taste." - John Doe</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="review-card">
+                    <p>"Absolutely love the variety and quality! Delivery was fast too." - Jane Smith</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="review-card">
+                    <p>"Great customer service and top-notch products! Highly recommend." - Mary Johnson</p>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <a href="#load-more-reviews" class="btn btn-lg btn-outline-primary" id="load-more-reviews">Show More Reviews</a>
+        </div>
+    </div>
+</section>
+</div>
+{% endblock %}
+{% block postloadjs %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#load-more-reviews').click(function() { 
+            var reviews = [
+                '"The quality of the meat is exceptional. I will be a regular customer!" - Alice Brown',
+                '"Amazing selection of fresh products. Very happy with my purchase." - Bob Green',
+                '"Excellent service and the products were fresh and tasty!" - Linda Blue'
+            ];
+
+            reviews.forEach(function(review) {
+                var newReview = '<div class="col-md-4 mb-4"><div class="review-card"><p>' + review + '</p></div></div>';
+                $('#reviews-container').append(newReview);
+            });
+ 
+            $('#load-more-reviews').hide();
+        });
+    });
+</script>
 {% endblock %}
