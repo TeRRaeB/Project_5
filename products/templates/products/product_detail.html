@@ -154,15 +154,14 @@
             {% endfor %}
         </div>
     
-        {% if reviews|length > 3 %}
-        <button onclick="showAllReviews()" class="btn btn-outline-dark mt-3">Show More Reviews</button>
-        {% endif %}
+            {% if reviews|length > 3 %}
+            <button onclick="showAllReviews()" class="btn btn-outline-dark mt-3">Show More Reviews</button>
+            {% endif %}
     
-        {% if reviews|length == 0 %}
-        <p class="text-center text-muted mt-4">No reviews yet. Be the first to leave one!</p>
-        {% endif %}
-    </div>
+    {% else  %}
+        <p class="text-center text-muted mt-4 pb-5">No reviews yet. Be the first to leave one!</p>
     {% endif %}
+    </div>
 </div>
 {% endblock %}
 {% block postloadjs %}
