@@ -14,20 +14,19 @@
 
 {% block content %}
 <div class="container-fluid">
-<div class="container h-100 bg-image">
-    <div class="row h-100 align-items-end">
-        <div class="col-12 col-md-6">
-        </div>
-        <div class="col-12 col-md-6 text-end">
-            <h1 class="display-4 logo-font text-white">Fresh products here</h1>
-            <div class="my-5">
-                <h4>
-                    <a href="{% url 'products' %}" class="shop-now-button btn btn-lg rounded-0 text-uppercase py-3">Shop Now</a>
-                </h4>
+    <div class="container-fluid p-0">
+        <div class="bg-image d-flex align-items-end">
+            <div class="container text-end py-5">
+                <h1 class="display-4 logo-font text-white">Fresh products here</h1>
+                <br> 
+                <div class="my-5">
+                    <h4>
+                        <a href="{% url 'products' %}" class="shop-now-button btn btn-lg rounded-0 text-uppercase py-3">Shop Now</a>
+                    </h4>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 <section class="quality-section py-5">
     <div class="container">
@@ -75,47 +74,50 @@
 <hr> 
 <section class="reviews-section py-5">
     <div class="container">
-        <h2 class="text-center mb-4">Customer Reviews</h2>
-        <div class="row" id="reviews-container"> 
-            <div class="col-md-4 mb-4">
-                <div class="review-card">
-                    <p>"Great quality products! I’m really impressed with the freshness and taste." - John Doe</p>
+        <h2 class="text-center mb-4">Latest Customer Reviews:</h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4" id="reviews-container">
+            {% for review in reviews %}
+            <div class="col review-card {% if forloop.counter > 4 %}d-none extra-review{% endif %}">
+                <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{% url 'product_detail' review.product.id %}" class="text-decoration-none">
+                                    {{ review.product.name }}
+                                </a>
+                            </h5>
+                            <p class="card-text text-muted small">
+                                <strong>{{ review.user.username }}</strong> &bull;
+                                {{ review.created_at|date:"d M Y" }}
+                            </p>
+                            <p class="card-text">"{{ review.comment }}"</p>
+                        </div>
+                        <div class="card-footer bg-white text-warning">
+                            {% for _ in "12345"|make_list %}
+                                <i class="fas fa-star {% if forloop.counter <= review.rating %}text-warning{% else %}text-secondary{% endif %}"></i>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="review-card">
-                    <p>"Absolutely love the variety and quality! Delivery was fast too." - Jane Smith</p>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="review-card">
-                    <p>"Great customer service and top-notch products! Highly recommend." - Mary Johnson</p>
-                </div>
-            </div>
+            {% endfor %}
         </div>
-        <div class="text-center">
-            <a href="#load-more-reviews" class="btn btn-lg btn-outline-primary" id="load-more-reviews">Show More Reviews</a>
+
+        {% if reviews|length > 4 %}
+        <div class="text-center mt-4">
+            <button class="btn btn-lg btn-outline-primary" id="load-more-reviews">Show All Reviews</button>
         </div>
+        {% endif %}
     </div>
 </section>
-</div>
 {% endblock %}
 {% block postloadjs %}
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('#load-more-reviews').click(function() { 
-            var reviews = [
-                '"The quality of the meat is exceptional. I will be a regular customer!" - Alice Brown',
-                '"Amazing selection of fresh products. Very happy with my purchase." - Bob Green',
-                '"Excellent service and the products were fresh and tasty!" - Linda Blue'
-            ];
+    document.addEventListener("DOMContentLoaded", function () {
+        let loadMoreButton = document.getElementById("load-more-reviews");
+        let extraReviews = document.querySelectorAll(".extra-review");
 
-            reviews.forEach(function(review) {
-                var newReview = '<div class="col-md-4 mb-4"><div class="review-card"><p>' + review + '</p></div></div>';
-                $('#reviews-container').append(newReview);
-            });
- 
-            $('#load-more-reviews').hide();
+        loadMoreButton.addEventListener("click", function () {
+            extraReviews.forEach(review => review.classList.remove("d-none"));
+            loadMoreButton.style.display = "none";
         });
     });
 </script>

@@ -1,12 +1,15 @@
 from django.shortcuts import render 
 from .forms import ContactForm
+from products.models import Review
 from django.core.mail import send_mail
 from django.conf import settings
 
 def index(request):
     """ A view to return index page """
 
-    return render(request, 'home/index.html')
+    reviews = Review.objects.select_related("user").order_by("-created_at")
+    
+    return render(request, 'home/index.html', {"reviews": reviews})
 
 def contact_view(request):
     if request.method == 'POST':

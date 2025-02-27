@@ -13,6 +13,7 @@ body {
 }
 .container-fluid {    
     background-color: rgba(255, 255, 255, 0.6) ;
+    padding: 0;
 }
 .card {
     transition: transform 0.3s ease-in-out;
@@ -24,8 +25,10 @@ body {
     background-image: url('/media/main_image.jpg');
     background-size: cover;
     background-position: center;
-    height: 100%;
-    position: relative;
+    width: 100%;
+    height: calc(100vh - 164px);
+    display: flex;
+    align-items: flex-end;
 }
 
 .shop-now-button {
