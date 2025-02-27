@@ -1,0 +1,50 @@
+{% extends "base.html" %} 
+
+{% block page_header %}
+<div class="container header-container">
+    <div class="row">
+        <div class="col">
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<div class="container-fluid">    
+    <div class="row pb-5">
+    <h1 class="text-center mb-4">Contact Us</h1>
+    <p class="text-center">Have any questions? Send us a message!</p>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form action="{% url 'contact' %}" method="POST" id="contact-form" class="review-form">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="id_name">Your Name:</label>
+                    <input type="text" name="name" id="id_name" class="form-control" placeholder="Your Name" required>
+                </div>
+            
+                <div class="form-group">
+                    <label for="id_email">Your Email:</label>
+                    <input type="email" name="email" id="id_email" class="form-control" placeholder="Your Email" required>
+                </div>
+            
+                <div class="form-group">
+                    <label for="id_subject">Subject:</label>
+                    <input type="text" name="subject" id="id_subject" class="form-control" placeholder="Subject" required>
+                </div>
+            
+                <div class="form-group">
+                    <label for="id_message">Your Message:</label>
+                    <textarea name="message" id="id_message" class="form-control" placeholder="Write your message here..." required></textarea>
+                </div>
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="submit" class="btn-submit w-50" id="submit-contact-btn">Send Message</button>
+                </div>
+            </form>
+            
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

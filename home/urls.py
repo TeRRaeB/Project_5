@@ -1,8 +1,9 @@
 from django.urls import path
 from . import views
-from .views import contact_view
 
 urlpatterns = [
     path('', views.index, name='home'),
-    path('contact/', contact_view, name='contact'),
+    path('contact/', views.contact_view, name='contact'),    
+    path('admin-panel/', views.admin_panel, name='admin_panel'),
+     path('admin-panel/delete_message/<contact_id>/', views.delete_message, name='delete_message'),
 ]

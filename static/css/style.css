@@ -341,6 +341,27 @@ textarea:focus {
     font-size: 0.9rem;
 }
  
+.message-text {
+    word-wrap: break-word;
+    word-break: break-word; 
+    white-space: normal;
+    overflow: hidden;
+    max-width: 100%;
+    transition: max-height 2s ease-out;
+    max-height: 60px; 
+}
+
+.message-text.open {
+    max-height: 500px;
+}
+.show-more-btn {
+    border: none;
+    background: none;
+    color: #007bff;
+    padding: 0;
+    font-size: 1.2rem;
+    cursor: pointer;
+} 
 
 @media (min-width: 1200px){
     .container {

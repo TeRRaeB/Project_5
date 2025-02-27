@@ -70,6 +70,28 @@
       </div>
       <div class="col-12 col-lg-4 my-auto py-1 py-lg-0">
         <ul class="list-inline list-unstyled text-center text-lg-right my-0">
+          <li class="list-inline-item">
+            <a href="{% url 'contact' %}" class="text-black nav-link">
+            <div class="text-center">
+              <div>
+                <i class="fas fa-envelope fa-lg"></i>
+              </div>
+              <p class="my-0">Contact Us</p>
+            </div>
+            </a>
+        </li>
+        {% if user.is_superuser %}
+          <li class="list-inline-item">
+              <a href="{% url 'admin_panel' %}" class="text-black nav-link">
+                  <div class="text-center">
+                      <div>
+                          <i class="fas fa-cogs fa-lg"></i>
+                      </div>
+                      <p class="my-0">Admin Panel</p>
+                  </div>
+              </a>
+          </li>
+        {% endif %}
           <li class="list-inline-item dropdown">
             <a class="text-black nav-link" href="#" id="user-options" data-bs-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
