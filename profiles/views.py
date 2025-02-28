@@ -1,11 +1,12 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from .models import UserProfile
+from django.contrib.auth.models import User
 from .forms import UserProfileForm
 from checkout.models import Order
 
 def profile(request):
-    profile = get_object_or_404(UserProfile, user=request.user)
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
     
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=profile)
@@ -20,9 +21,9 @@ def profile(request):
     context = {
         'form': form,
         'orders': orders,
-        'profile':profile,
+        'profile': profile,
     }
-    return render(request, template,context)
+    return render(request, template, context)
 
 def order_history(request, order_number):
     order = get_object_or_404(Order, order_number=order_number)
@@ -39,3 +40,4 @@ def order_history(request, order_number):
     }
 
     return render(request, template, context)
+

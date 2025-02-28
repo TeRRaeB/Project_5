@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse,HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.db.models.functions import Coalesce
+from django.http import JsonResponse
 from django.contrib import messages
 from django.db.models import Q, Avg, Value,FloatField
 from .models import Product, Rating, Category, SubCategory, Review
-from .forms import ReviewForm
+from .forms import ReviewForm,ProductForm
 
 def all_products(request):
 
@@ -150,3 +151,28 @@ def add_review(request, product_id):
         form = ReviewForm()
 
     return render(request, "products/add_review.html", {"form": form, "product": product})
+
+def add_product(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.info(request, 'Successfully added product!')
+            return redirect(reverse('add_product'))
+        else:
+            messages.error(request, 'Failed to add product. Please ensure the form is valid.')
+    else:
+        form = ProductForm()
+        
+    template = 'products/add_product.html'
+    context = {
+        'form': form,
+    }
+    return render(request, template, context) 
+
+def get_subcategories(request, category_id):
+    subcategories = SubCategory.objects.filter(category_id=category_id)
+    data = {
+        'subcategories': list(subcategories.values('id', 'name'))
+    }
+    return JsonResponse(data)
