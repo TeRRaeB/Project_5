@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os.path
 from pathlib import Path
 
-import env
 
 from django.conf.global_settings import EMAIL_BACKEND, LOGIN_REDIRECT_URL
 
