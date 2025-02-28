@@ -1,1 +1,1 @@
-web: gunicorn golden_hoof.wsgi
+web: gunicorn golden_hoof.wsgi:application
