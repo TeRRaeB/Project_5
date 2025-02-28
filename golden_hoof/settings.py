@@ -31,7 +31,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["golden-hoof-e080ba2678ec.herokuapp.com",]
+ALLOWED_HOSTS = ["golden-hoof-e080ba2678ec.herokuapp.com","127.0.0.1"]
 
 DATABASES = {
     'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
