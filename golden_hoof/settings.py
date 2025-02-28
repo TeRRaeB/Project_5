@@ -34,11 +34,7 @@ DEBUG = True
 ALLOWED_HOSTS = ["golden-hoof-e080ba2678ec.herokuapp.com",]
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default="postgresql://neondb_owner:npg_c9YZfjrX2glh@ep-silent-night-a26l4z6a.eu-central-1.aws.neon.tech/busy_sixth_grunt_389109",
-        conn_max_age=600,
-        ssl_require=True
-    )
+    'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
 }
 
 # Application definition
