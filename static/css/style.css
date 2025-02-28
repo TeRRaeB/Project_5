@@ -251,6 +251,10 @@ fieldset > .form-group {
     margin: auto;
 }
 
+input[name='q']::placeholder {
+    color: #aab7c4;
+}
+
 .review-form {
     max-width: 600px;
     margin: 0 auto;

@@ -26,8 +26,7 @@
             star.addEventListener("click", () => {
                 const selectedRating = parseInt(star.getAttribute("data-value"));
                 ratingValueInput.value = selectedRating;
-                updateStars(ratingStars, selectedRating);
-                console.log("Rating selected: " + selectedRating); 
+                updateStars(ratingStars, selectedRating); 
                 ratingForm.submit(); 
             });
         });
@@ -41,13 +40,10 @@
         });
 
         reviewForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            console.log("Review form submitted");
+            e.preventDefault(); 
 
             const selectedRating = reviewValueInput.value;
-            if (selectedRating > 0) {
-                console.log("Submitting review with rating: " + selectedRating);  
-                console.log(reviewForm);
+            if (selectedRating > 0) { 
                 reviewForm.submit(); 
             } else {
                 alert("Please select a rating before submitting your review.");

@@ -6,9 +6,12 @@ from django.contrib.auth.decorators import user_passes_test
 from products.models import Review
 from django.core.mail import send_mail
 from django.conf import settings
+from allauth.account.views import LoginView
 
+class CustomLoginView(LoginView):
+    template_name = 'account/login.html'
+    
 def index(request):
-    """ A view to return index page """
 
     reviews = Review.objects.select_related("user").order_by("-created_at")
     

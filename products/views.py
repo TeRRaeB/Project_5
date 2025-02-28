@@ -7,7 +7,6 @@ from .models import Product, Rating, Category, SubCategory, Review
 from .forms import ReviewForm
 
 def all_products(request):
-    """A view to show all products"""
 
     products = Product.objects.all()
     query = None
