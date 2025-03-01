@@ -14,16 +14,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = ["golden-hoof-e080ba2678ec.herokuapp.com", "127.0.0.1"]
 
-if 'DATABASE_URL' in os.environ:
-    DATABASES = {
+DATABASES = {
         'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
     }
 
 INSTALLED_APPS = [
