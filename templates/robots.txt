@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /admin/
+Allow: /
+Sitemap: https://golden-hoof-e080ba2678ec.herokuapp.com/sitemap.xml
