@@ -9,8 +9,8 @@ if os.path.isfile('env.py'):
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings
-SECRET_KEY = os.environ.get('SECRET_KEY')
-DEBUG = False
+SECRET_KEY = os.environ.get('SECRET_KEY', 'default-secret-for-local-dev')
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = ["golden-hoof-e080ba2678ec.herokuapp.com", "127.0.0.1"]
 
 # Database
@@ -105,28 +105,32 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# AWS S3 settings
-AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME')
-AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-
+# Static and media settings by default (local)
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_LOCATION = 'static'
-MEDIAFILES_LOCATION = 'media'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-if not DEBUG:
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# AWS S3 settings (override if USE_AWS is True)
+USE_AWS = os.environ.get('USE_AWS', 'False') == 'True'
+if USE_AWS:
+    AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', 'golden-hoof')
+    AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME', 'eu-north-1')
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+
+    # Static files
+    STATICFILES_LOCATION = 'static'
     STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+    # Media files
+    MEDIAFILES_LOCATION = 'media'
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIAFILES_LOCATION}/'
-else:
-    STATIC_URL = '/static/'
-    MEDIA_URL = '/media/'
-    STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-    
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
 ROOT_URLCONF = 'golden_hoof.urls'
 
 # Other settings
