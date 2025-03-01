@@ -113,27 +113,29 @@ AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 
 # Static and media files
-STATICFILES_STORAGE = 'custom_storages.StaticStorage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 STATICFILES_LOCATION = 'static'
-DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 MEDIAFILES_LOCATION = 'media'
-
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-ROOT_URLCONF = 'golden_hoof.urls'
 
 STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
 MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIAFILES_LOCATION}/'
+
+# Static and media dirs (local development only, optional)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+ROOT_URLCONF = 'golden_hoof.urls'
 
 # Other settings
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-
 FREE_DELIVERY_THRESHOLD = 50
 STANDARD_DELIVERY_PERCENTAGE = 10
 
+# Stripe settings
 STRIPE_CURRENCY = 'eur'
 STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY', '')
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', '')
