@@ -12,4 +12,4 @@ class ProductSitemap(Sitemap):
         return timezone.now() 
 
     def location(self, obj):
-        return f"{settings.SITE_URL}{reverse('product_detail', args=[obj.id])}"
+        return f"{settings.SITE_URL}{reverse('product_detail', args=[obj.id]).lstrip('/')}"

@@ -14,8 +14,7 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 SITE_URL = "https://golden-hoof-e080ba2678ec.herokuapp.com"
 
-ALLOWED_HOSTS = ["golden-hoof-e080ba2678ec.herokuapp.com"]
-
+ALLOWED_HOSTS = ["golden-hoof-e080ba2678ec.herokuapp.com","127.0.0.1"]
 # Database
 DATABASES = {
     'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
