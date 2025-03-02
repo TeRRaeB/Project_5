@@ -20,7 +20,11 @@ from django.conf import settings
 from django.views.generic import TemplateView
 from django.conf.urls.static import static 
 from django.contrib.sitemaps.views import sitemap
-from sitemaps import sitemaps
+from products.sitemaps import ProductSitemap
+
+sitemaps = {
+    'products': ProductSitemap,
+}
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -30,9 +34,9 @@ urlpatterns = [
     path("bag/", include("bag.urls")),
     path("profile/", include("profiles.urls")),
     path("checkout/", include("checkout.urls")),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += [
-    path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="django.contrib.sitemaps.views.sitemap"),
     path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
 ]
 handler404 = 'golden_hoof.views.handler404'
