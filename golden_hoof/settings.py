@@ -12,9 +12,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'default-secret-for-local-dev')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-SITE_URL = "https://golden-hoof-e080ba2678ec.herokuapp.com/"
+SITE_URL = "https://golden-hoof-e080ba2678ec.herokuapp.com"
 
-ALLOWED_HOSTS = ["golden-hoof-e080ba2678ec.herokuapp.com", "127.0.0.1"]
+ALLOWED_HOSTS = ["golden-hoof-e080ba2678ec.herokuapp.com"]
 
 # Database
 DATABASES = {
@@ -99,7 +99,7 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASS')
 DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
 
-DEFAULT_FROM_EMAIL = "goldenhoof@example.com"
+DEFAULT_FROM_EMAIL = "goldenhoof@goldenhoof.com"
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
