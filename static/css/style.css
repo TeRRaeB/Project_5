@@ -15,6 +15,11 @@ body {
     background-color: rgba(255, 255, 255, 0.6) ;
     padding: 0;
 }
+
+.footer {
+    position: relative;
+    width: 100%;
+}
 .card {
     transition: transform 0.3s ease-in-out;
 }
@@ -30,7 +35,11 @@ body {
     display: flex;
     align-items: flex-end;
 }
-
+#mc_embed_signup{
+    clear:left; 
+    font:14px Helvetica,Arial,sans-serif; 
+    width: 400px;
+}
 .shop-now-button {
     position: relative;
     bottom: 50px;
