@@ -1,3 +1,4 @@
+import os,boto3
 from django.shortcuts import render, get_object_or_404, redirect, reverse,HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.db.models.functions import Coalesce
@@ -6,6 +7,10 @@ from django.contrib import messages
 from django.db.models import Q, Avg, Value,FloatField
 from .models import Product, Rating, Category, SubCategory, Review
 from .forms import ReviewForm,ProductForm
+from botocore.exceptions import ClientError
+from django.core.files.storage import default_storage
+from storages.backends.s3boto3 import S3Boto3Storage
+
 
 def all_products(request):
 
@@ -152,29 +157,39 @@ def add_review(request, product_id):
 
     return render(request, "products/add_review.html", {"form": form, "product": product})
 
-@login_required
 def add_product(request):
     if not request.user.is_superuser:
         messages.error(request, 'Sorry, only store owners can do that.')
         return redirect(reverse('home'))
-    
+
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
-            product = form.save()
-            messages.info(request, 'Successfully added product!')
-            return redirect(reverse('product_detail', args=[product.id]))
+                product = form.save(commit=False)
+                product.save()
+                if product.image:                    
+                    storage = S3Boto3Storage()
+                    with product.image.open() as f:
+                        file_path = f"{product.image.name}"
+                        storage.save(file_path, f)                    
+                    product.image.name = file_path
+                    product.save()
+                    s3_client = boto3.client(
+                        's3',
+                        aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
+                        aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
+                        region_name=os.environ.get('AWS_S3_REGION_NAME')
+                    )
+                    s3_client.head_object(Bucket='golden-hoof', Key=file_path)
+
+                messages.info(request, 'Successfully added product!')
+                return redirect(reverse('product_detail', args=[product.id]))
         else:
             messages.error(request, 'Failed to add product. Please ensure the form is valid.')
     else:
         form = ProductForm()
-        
-    template = 'products/add_product.html'
-    context = {
-        'form': form,
-    }
 
-    return render(request, template, context) 
+    return render(request, 'products/add_product.html', {'form': form})
 
 def get_subcategories(request, category_id):
     subcategories = SubCategory.objects.filter(category_id=category_id)

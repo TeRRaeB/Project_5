@@ -22,7 +22,7 @@ class Product(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=6, decimal_places=2) 
     image_url = models.URLField(max_length=1024, null= True, blank=True)
-    image = models.ImageField(null=True, blank=True)
+    image = models.FileField(null=True, blank=True)
     
     def __str__(self):
         return self.name
@@ -43,6 +43,20 @@ class Rating(models.Model):
     rating = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        existing_review = Review.objects.filter(user=self.user, product=self.product).first()
+        if existing_review:
+            existing_review.rating = self.rating
+            existing_review.save()
+            return
+        existing_rating = Rating.objects.filter(user=self.user, product=self.product).exclude(pk=self.pk).first()
+        if existing_rating:
+            existing_rating.rating = self.rating
+            existing_rating.save()
+            return
+
+        super().save(*args, **kwargs)
+
     class Meta:
         unique_together = ('user', 'product')
         
@@ -52,6 +66,20 @@ class Review(models.Model):
     rating = models.IntegerField()
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        existing_rating = Rating.objects.filter(user=self.user, product=self.product).first()
+        if existing_rating:
+            existing_rating.rating = self.rating
+            existing_rating.save()
+
+        existing_review = Review.objects.filter(user=self.user, product=self.product).exclude(pk=self.pk).first()
+        if existing_review:
+            existing_review.rating = self.rating
+            existing_review.comment = self.comment
+            existing_review.save()
+        else:
+            super().save(*args, **kwargs) 
 
     class Meta:
         unique_together = ('user', 'product')
