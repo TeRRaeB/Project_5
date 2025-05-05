@@ -1,0 +1,2 @@
+Error in handle_payment_intent_succeeded: charges
+Internal Server Error: /checkout/wh/
