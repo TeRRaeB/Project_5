@@ -362,10 +362,13 @@ Follow the prompts to set up the superuser credentials (username, email, passwor
 
 ### HTML 
 [W3C HTML validator](https://validator.w3.org/)
-
+HTML index
 ![HTML index valid](/doc/valid-html.png)
+Product add
 ![HTML "Product add" valid](/doc/valid-html-2.png)
+Bag page
 ![HTML "Bag page" valid](/doc/valid-html-3.png)
+All Products
 ![HTML "Products page" valid](/doc/valid-html-4.png)
 
 
