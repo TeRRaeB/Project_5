@@ -98,8 +98,6 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASS')
 DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
 
-DEFAULT_FROM_EMAIL = "mikhalov.valentin@gmail.com"
-
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -163,3 +161,25 @@ STRIPE_WH_SECRET = os.getenv('STRIPE_WH_SECRET', '')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'webhook_errors.log',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
