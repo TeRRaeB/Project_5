@@ -203,12 +203,29 @@ def edit_product(request, product_id):
     if not request.user.is_superuser:
         messages.error(request, 'Sorry, only store owners can do that.')
         return redirect(reverse('home'))
-    
+
     product = get_object_or_404(Product, pk=product_id)
+
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
-            form.save()
+            product = form.save(commit=False)
+            if 'image' in request.FILES:
+                storage = S3Boto3Storage()
+                with product.image.open() as f:
+                    file_path = f"{product.image.name}"
+                    storage.save(file_path, f)                    
+                    product.image.name = file_path
+                    product.save()
+                    s3_client = boto3.client(
+                        's3',
+                        aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
+                        aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
+                        region_name=os.environ.get('AWS_S3_REGION_NAME')
+                        )
+                    s3_client.head_object(Bucket='golden-hoof', Key=file_path)
+
+            product.save()
             messages.info(request, 'Successfully updated product!')
             return redirect(reverse('product_detail', args=[product.id]))
         else:

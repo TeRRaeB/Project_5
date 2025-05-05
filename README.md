@@ -226,7 +226,7 @@ Follow these steps to set up the project locally:
 
 ### 1. Clone the Repository
 
-First, clone the repository to your local machine:
+Clone the project from GitHub and navigate into the project directory:
 
 ```bash
 git clone https://github.com/TeRRaeB/Project_5.git
@@ -234,15 +234,16 @@ cd Project_5
 ```
 
 
-### 2. Install Dependencies
+### 2. Install Python Dependencies
 
-Once the virtual environment is activated, install the required dependencies using `pip`:
+Install the required Python packages using:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-This will install all necessary Python packages listed in `requirements.txt`.
+This installs all dependencies listed in `requirements.txt`.
+
 
 ### 3. Create the `env.py` File
 
@@ -295,7 +296,7 @@ Once everything is set up, you can start the Django development server:
 python manage.py runserver
 ```
 
-You can now access the project in your browser at `http://127.0.0.1:8000/`.
+Visit `http://127.0.0.1:8000/` in your browser to view the project.
 
 ### 7. Create a Superuser (Optional)
 
@@ -309,12 +310,63 @@ Follow the prompts to set up the superuser credentials (username, email, passwor
 
 ---
 
+## Deployment to Heroku
+
+1. **Prepare your code**:
+    - Make sure all dependencies are listed by running:
+      ```bash
+      pip freeze > requirements.txt
+      ```
+    - Create a `Procfile` in the root of your project:
+      ```bash
+      web: gunicorn golden_hoof.wsgi
+      ```
+2. **Push changes to GitHub**:
+    ```bash
+    git add .
+    git commit -m "Prepare for Heroku deployment"
+    git push
+    ```
+
+3. **Create and configure Heroku app**:
+    - Log in to Heroku and create a new app.
+    - Choose a unique app name and region.
+    - Go to **Resources → Add-ons** and search for **Heroku Postgres**. Add it.
+
+4. **Set environment variables** in **Settings → Reveal Config Vars**:
+    - `SECRET_KEY`
+    - `STRIPE_PUBLIC_KEY`
+    - `STRIPE_SECRET_KEY`
+    - `STRIPE_WH_SECRET`
+    - `AWS_ACCESS_KEY_ID`
+    - `AWS_SECRET_ACCESS_KEY`
+    - `AWS_STORAGE_BUCKET_NAME`
+    - `USE_AWS = True`
+    - `DATABASE_URL` is added automatically
+
+5. **Allow Heroku in Django settings**:
+    ```python
+    ALLOWED_HOSTS = ['golden-hoof.herokuapp.com']    
+    ```
+6. **Deploy from GitHub**:
+    - Go to **Deploy** tab.
+    - Choose **GitHub** as deployment method.
+    - Connect your repo and enable auto deploys or manually deploy branch.
+
+7. **View the deployed app**:
+    - Once deployed, click **View** to open your live site.
+
+---
+
 ## Testing
 
 ### HTML 
 [W3C HTML validator](https://validator.w3.org/)
 
-![HTML valid](/doc/valid-html.png)
+![HTML index valid](/doc/valid-html.png)
+![HTML "Product add" valid](/doc/valid-html-2.png)
+![HTML "Bag page" valid](/doc/valid-html-3.png)
+![HTML "Products page" valid](/doc/valid-html-4.png)
 
 
 ### CSS
@@ -346,6 +398,49 @@ Testing for responsiveness was conducted using Chrome Dev Tools. The website was
 | iPad Pro |  1024 x 1366 |   Pass  | 
 | HP Laptop 14s |  1920 x 1080|   Pass  | 
  
+### Manual Testing
+
+Manual testing was conducted to verify the functionality, usability, and reliability of the application across various user scenarios, including user interactions, payment processing, and error handling. The tests ensured that all features work as expected in real-world conditions on multiple browsers (Chrome, Firefox, Safari) and devices.
+
+#### Objectives
+- Validate end-to-end user flows (e.g., registration, product browsing, checkout).
+- Confirm integration with external services, such as Stripe for payments.
+- Test error handling for edge cases (e.g., invalid inputs, empty cart).
+- Ensure the admin panel supports all required operations.
+
+#### Test Scenarios
+The following scenarios were manually tested to cover critical functionality:
+
+| Feature | Scenario | Steps | Expected Result | Status |
+|---------|----------|-------|-----------------|--------|
+| **User Authentication** | User registration | 1. Navigate to `/accounts/signup/`. <br> 2. Enter valid email, username, and password. <br> 3. Submit the form. | User is registered, redirected to login page, and receives a confirmation message. | Pass |
+| **User Authentication** | User login | 1. Navigate to `/accounts/login/`. <br> 2. Enter valid credentials. <br> 3. Submit the form. | User is logged in and redirected to the homepage. | Pass |
+| **User Authentication** | Invalid login | 1. Navigate to `/accounts/login/`. <br> 2. Enter incorrect credentials. <br> 3. Submit the form. | Error message: "Invalid username or password." | Pass |
+| **Product Management** | View product list | 1. Navigate to `/products/`. <br> 2. Browse product listings. | All products are displayed with correct names, prices, and images. | Pass |
+| **Product Management** | Add product (admin) | 1. Log in as superuser. <br> 2. Navigate to `/products/add/`. <br> 3. Add a new product with category, subcategory, name, description, price, and image. | Product is added and visible on `/products/`. | Pass |
+| **Shopping bag** | Add item to bag | 1. Navigate to a product page. <br> 2. Click "Add to bag." | Item is added to bag, and bag icon updates with item count. | Pass |
+| **Shopping bag** | Empty cart checkout | 1. Navigate to `/bag/`. <br> 2. Attempt checkout with an empty cart. | Error message: "Your bag is empty." | Pass |
+| **Checkout & Payment** | Successful payment | 1. Add items to cart. <br> 2. Navigate to `/checkout/`. <br> 3. Enter valid Stripe test card details (e.g., 4242 4242 4242 4242). <br> 4. Submit payment. | Payment is processed, user is redirected to a success page, and order is recorded. | Pass |
+| **Checkout & Payment** | Failed payment | 1. Add items to cart. <br> 2. Navigate to `/checkout/`. <br> 3. Enter invalid card details. <br> 4. Submit payment. | Error message from Stripe: "Invalid card details." | Pass |
+| **Error Handling** | Access non-existent page | 1. Navigate to `/nonexistent/`. | Custom 404 error page is displayed. | Pass |
+| **Error Handling** | Server error simulation | 1. Simulate a server error (e.g., misconfigured database). | Custom 500 error page is displayed. | Pass |
+
+
+#### Testing Environment
+- **Browsers**: Chrome (latest), Firefox (latest).
+- **Device**: Desktop (1920x1080)
+- **Network Conditions**: Tested with both high-speed Wi-Fi and throttled 3G to simulate real-world scenarios.
+
+#### Stripe Integration Testing
+- **Test Cards**: Used Stripe’s test card numbers (e.g., `4242 4242 4242 4242` for success, `4000 0000 0000 0002` for failure).
+- **Webhooks**: Verified that Stripe webhooks correctly update order statuses (e.g., payment succeeded, payment failed).
+- **Security**: Ensured sensitive data (e.g., card details) is not stored in the database.
+
+#### Observations
+- All user flows worked as expected, with intuitive navigation and clear feedback.
+- Stripe payments were processed reliably, with proper error handling for invalid inputs.
+- Custom error pages (404, 500) rendered correctly and provided user-friendly messages.
+- The admin panel was fully functional for CRUD operations on products, users, and orders.
 
 ## Known Issues & Troubleshooting
 
@@ -354,17 +449,7 @@ Testing for responsiveness was conducted using Chrome Dev Tools. The website was
 
 **Solution:** After facing import issues, the data was re-uploaded manually to ensure the proper functioning of the application. It is recommended to use PostgreSQL from the start to avoid these issues with data migration.
 
-### 2. AWS S3 Integration for Static and Media Files
-**Problem:** Automatic upload of static and media files to AWS S3 was not working as expected. The files had to be manually uploaded using the following commands:
-
-```bash
-aws s3 cp ./static/ s3://golden-hoof/static/ --recursive
-aws s3 cp ./media/ s3://golden-hoof/media/ --recursive
-```
-
-**Solution:** Currently, the static and media files are uploaded manually. A more efficient solution would be to investigate and resolve the issues with `django-storages` and automatic file handling in the future.
-
-### 3. Dependency Issues on Heroku Deployment
+### 2. Dependency Issues on Heroku Deployment
 **Problem:** While deploying the project to Heroku, some dependencies in the `requirements.txt` file had to be updated. Specifically, the version numbers had to be changed from `==version` to `>=version` to avoid version conflicts. Additionally, the `Profiles` app required a newer version of `django-countries` (version `>=7.6.1`).
 
 **Solution:** To resolve these issues, the dependencies were updated in the `requirements.txt` file, and the necessary changes were made to ensure compatibility with Heroku. It is advised to regularly check for updates to dependencies when deploying to different environments.

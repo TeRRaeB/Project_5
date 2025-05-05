@@ -107,10 +107,11 @@
         </div>
         {% endif %}
     </div>
-</section>
+    </section>
+</div>
 {% endblock %}
 {% block postloadjs %}
-<script type="text/javascript">
+<script>
     document.addEventListener("DOMContentLoaded", function () {
         let loadMoreButton = document.getElementById("load-more-reviews");
         let extraReviews = document.querySelectorAll(".extra-review");

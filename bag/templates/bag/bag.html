@@ -151,7 +151,7 @@
 {{ block.super }}
 {% include 'products/includes/quantity_input_script.html' %}
 
-<script type="text/javascript">
+<script>
     $('.update-link').click(function(e){
         e.preventDefault();
         let form = $(this).closest('td').find('.update-form'); 
