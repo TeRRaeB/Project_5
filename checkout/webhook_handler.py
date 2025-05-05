@@ -8,9 +8,6 @@ from products.models import Product
 from profiles.models import UserProfile 
 import json
 import time
-import logging
-
-logger = logging.getLogger(__name__)
 
 class StripeWH_Handler:
     def __init__(self, request):
@@ -19,7 +16,6 @@ class StripeWH_Handler:
     def _send_confirmation_email(self, order):
         cust_email = order.email
         if not cust_email:
-            logger.error(f"No email provided for order {order.order_number}")
             return
         try:
             subject = render_to_string(
@@ -35,12 +31,12 @@ class StripeWH_Handler:
                 [cust_email],
                 fail_silently=False,
             )
-            logger.info(f"Confirmation email sent to {cust_email} for order {order.order_number}")
-        except Exception as e:
-            logger.error(f"Failed to send email to {cust_email} for order {order.order_number}: {e}")
-
+        except Exception as e:            
+            return HttpResponse(
+                content=f'Webhook received | ERROR: {e}',
+                    status=500)
+            
     def handle_event(self, event):
-        logger.info(f"Handling event: {event['type']}")
         if event['type'] == 'payment_intent.succeeded':
             return self.handle_payment_intent_succeeded(event)
         # ... (обработка других типов событий)
@@ -49,7 +45,6 @@ class StripeWH_Handler:
             status=200)
 
     def handle_payment_intent_succeeded(self, event):
-        logger.info(f"Received event: type={event.get('type', 'unknown')}, event={event}")
         try:
             # Поддержка stripe.Event и словаря
             if isinstance(event, dict):
@@ -58,7 +53,6 @@ class StripeWH_Handler:
                 intent = event.data.object
 
             if not intent:
-                logger.error("Invalid event structure: missing data.object")
                 return HttpResponse(
                     content=f'Webhook received: {event.get("type", "unknown")} | ERROR: Missing data.object',
                     status=400)
@@ -66,12 +60,10 @@ class StripeWH_Handler:
             pid = intent.id
             bag = intent.metadata.bag
             save_info = intent.metadata.save_info
-            logger.info(f"Processing payment_intent.succeeded for intent: {pid}")
 
             billing_details = intent.charges.data[0].billing_details
             shipping_details = intent.shipping
             grand_total = round(intent.charges.data[0].amount / 100, 2)
-            logger.info(f"Billing email: {billing_details.email}, Grand total: {grand_total}")
 
             for field, value in shipping_details.address.items():
                 if value == "":
@@ -82,7 +74,6 @@ class StripeWH_Handler:
             if username != 'AnonymousUser':
                 profile = UserProfile.objects.get(user__username=username)
                 if save_info:
-                    logger.info(f"Updating profile for user: {username}")
                     profile.default_phone_number = shipping_details.phone
                     profile.default_country = shipping_details.address.country
                     profile.default_postcode = shipping_details.address.postal_code
@@ -111,14 +102,11 @@ class StripeWH_Handler:
                         stripe_pid=pid,
                     )
                     order_exists = True
-                    logger.info(f"Order {order.order_number} found in database")
                     break
                 except Order.DoesNotExist:
-                    logger.info(f"Order not found, attempt {attempt}")
                     attempt += 1
                     time.sleep(1)
                 except Exception as e:
-                    logger.error(f"Error finding order for intent {pid}: {e}")
                     return HttpResponse(
                         content=f'Webhook received: {event.get("type", "unknown")} | ERROR: {e}',
                         status=500)
@@ -131,7 +119,6 @@ class StripeWH_Handler:
             else:
                 order = None
                 try:
-                    logger.info(f"Creating new order for intent {pid}")
                     order = Order.objects.create(
                         full_name=shipping_details.name,
                         user_profile=profile,
@@ -162,13 +149,11 @@ class StripeWH_Handler:
                 except Exception as e:
                     if order:
                         order.delete()
-                    logger.error(f"Error creating order for intent {pid}: {e}")
                     return HttpResponse(
                         content=f'Webhook received: {event.get("type", "unknown")} | ERROR: {e}',
                         status=500)
 
         except Exception as e:
-            logger.error(f"Error in handle_payment_intent_succeeded: {e}")
             return HttpResponse(
                 content=f'Webhook received: {event.get("type", "unknown")} | ERROR: {e}',
                 status=500)
